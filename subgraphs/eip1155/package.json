@@ -1,0 +1,21 @@
+{
+  "name": "eip1155",
+  "description": "EIP1155 Subgraph",
+  "version": "1.0.0",
+  "repository": "git@github.com:ququzone/subgraphs.git",
+  "author": "ququzone",
+  "license": "MIT",
+  "scripts": {
+    "codegen": "graph codegen subgraph.yaml",
+    "build:goerli": "graph build subgraph.yaml --network goerli",
+    "build:mainnet": "graph build subgraph.yaml --network mainnet",
+    "build:iotex_testnet": "graph build subgraph.yaml --network iotex_testnet",
+    "build:iotex": "graph build subgraph.yaml --network iotex",
+    "create:iotex_testnet": "graph create testnet/eip1155 --node https://rpc.graph.mainnet.iotex.io/",
+    "create:iotex": "graph create ququzone/eip1155 --node https://rpc.graph.mainnet.iotex.io/",
+    "deploy:goerli": "graph deploy --product hosted-service --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ ququzone/eip1155 subgraph.yaml --network goerli",
+    "deploy:mainnet": "graph deploy --product hosted-service --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ ququzone/eip1155 subgraph.yaml --network mainnet",
+    "deploy:iotex_testnet": "graph deploy --product hosted-service --node https://rpc.graph.mainnet.iotex.io/ --ipfs https://ipfs.mainnet.iotex.io testnet/eip1155 subgraph.yaml --network iotex_testnet",
+    "deploy:iotex": "graph deploy --product hosted-service --node https://rpc.graph.mainnet.iotex.io/ --ipfs https://ipfs.mainnet.iotex.io ququzone/eip1155 subgraph.yaml --network iotex"
+  }
+}

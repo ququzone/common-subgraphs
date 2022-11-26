@@ -1,0 +1,12 @@
+{
+  "iotex_testnet": {
+    "EIP1155": {
+      "startBlock": 17000000
+    }
+  },
+  "iotex": {
+    "EIP1155": {
+      "startBlock": 20000000
+    }
+  }
+}
