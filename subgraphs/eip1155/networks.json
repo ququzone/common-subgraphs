@@ -6,7 +6,7 @@
   },
   "iotex": {
     "EIP1155": {
-      "startBlock": 20000000
+      "startBlock": 100000
     }
   }
 }
