@@ -154,3 +154,25 @@ type Transaction @entity {
     "Block timestamp"
     timestamp: BigInt!
 }
+
+"""
+EIP-1155 Token Owners
+"""
+type TokenOwner @entity {
+    "ID"
+    id: ID!
+
+    "Owner"
+    owner: Owner!
+
+    "Amount"
+    amount: BigInt!
+
+    "Token"
+    token: Token!
+
+    "Created At"
+    createdAt: BigInt!
+    "Updated At"
+    updatedAt: BigInt!
+}

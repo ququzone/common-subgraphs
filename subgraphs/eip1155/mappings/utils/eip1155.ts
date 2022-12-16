@@ -33,3 +33,14 @@ export function fetchURI(address: Address, tokenID: BigInt): string | null {
 
   return null;
 }
+
+export function fetchBalance(address: Address, account: Address, tokenID: BigInt): BigInt {
+  const contract = EIP1155.bind(address);
+
+  const balance = contract.try_balanceOf(account, tokenID);
+  if (!balance.reverted) {
+    return balance.value;
+  }
+
+  return BigInt.zero();
+}

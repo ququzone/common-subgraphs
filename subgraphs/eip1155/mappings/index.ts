@@ -1,8 +1,8 @@
 import { Address, BigInt, log } from "@graphprotocol/graph-ts";
-import { Blockchain, Collection, Owner, Token, Transaction } from "../generated/schema";
+import { Blockchain, Collection, Owner, Token, TokenOwner, Transaction } from "../generated/schema";
 import { TransferBatch, TransferSingle, URI } from "../generated/EIP1155/EIP1155";
 import { toBigDecimal } from "../../../helpers/utils";
-import { fetchName, fetchSymbol, fetchURI } from "./utils/eip1155";
+import { fetchName, fetchSymbol, fetchURI, fetchBalance } from "./utils/eip1155";
 
 export function handleTransferBatch(event: TransferBatch): void {
   let blockchain = Blockchain.load("ETH");
@@ -84,7 +84,7 @@ export function handleTransferBatch(event: TransferBatch): void {
       token.tokenID = ids[i];
       token.minter = to.id;
       token.owner = to.id;
-      token.burned = false;
+      token.burned = event.params._to.equals(Address.zero());
       token.tokenURI = fetchURI(event.address, ids[i]);
       token.totalTransactions = BigInt.zero();
       token.block = event.block.number;
@@ -109,6 +109,36 @@ export function handleTransferBatch(event: TransferBatch): void {
     token.totalTransactions = token.totalTransactions.plus(BigInt.fromI32(1));
     token.updatedAt = event.block.timestamp;
     token.save();
+
+    // TokenOwner
+    let tokenOwnerFrom = TokenOwner.load(event.address.toHex() + "-" + from.id + "-" + ids[i].toString());
+    if (tokenOwnerFrom === null) {
+      // Owner - as Sender
+      tokenOwnerFrom = new TokenOwner(event.address.toHex() + "-" + from.id + "-" + ids[i].toString());
+      tokenOwnerFrom.token = token.id;
+      tokenOwnerFrom.owner = from.id;
+      tokenOwnerFrom.amount = BigInt.zero();
+      tokenOwnerFrom.createdAt = event.block.timestamp;
+      tokenOwnerFrom.updatedAt = event.block.timestamp;
+      tokenOwnerFrom.save();
+    }
+    tokenOwnerFrom.amount = fetchBalance(event.address, event.params._from, ids[i]);
+    tokenOwnerFrom.updatedAt = event.block.timestamp;
+    tokenOwnerFrom.save();
+    let tokenOwnerTo = TokenOwner.load(event.address.toHex() + "-" + to.id + "-" + ids[i].toString());
+    if (tokenOwnerTo === null) {
+      // Token
+      tokenOwnerTo = new TokenOwner(event.address.toHex() + "-" + to.id + "-" + ids[i].toString());
+      tokenOwnerTo.token = token.id;
+      tokenOwnerTo.owner = to.id;
+      tokenOwnerTo.amount = BigInt.zero();
+      tokenOwnerTo.createdAt = event.block.timestamp;
+      tokenOwnerTo.updatedAt = event.block.timestamp;
+      tokenOwnerTo.save();
+    }
+    tokenOwnerTo.amount = fetchBalance(event.address, event.params._to, ids[i]);
+    tokenOwnerTo.updatedAt = event.block.timestamp;
+    tokenOwnerTo.save();
 
     // Transaction
     const transaction = new Transaction(event.transaction.hash.toHex() + "-" + ids[i].toString());
@@ -229,6 +259,36 @@ export function handleTransferSingle(event: TransferSingle): void {
   token.totalTransactions = token.totalTransactions.plus(BigInt.fromI32(1));
   token.updatedAt = event.block.timestamp;
   token.save();
+
+  // TokenOwner
+  let tokenOwnerFrom = TokenOwner.load(event.address.toHex() + "-" + from.id + "-" + event.params._id.toString());
+  if (tokenOwnerFrom === null) {
+    // Owner - as Sender
+    tokenOwnerFrom = new TokenOwner(event.address.toHex() + "-" + from.id + "-" + event.params._id.toString());
+    tokenOwnerFrom.token = token.id;
+    tokenOwnerFrom.owner = from.id;
+    tokenOwnerFrom.amount = BigInt.zero();
+    tokenOwnerFrom.createdAt = event.block.timestamp;
+    tokenOwnerFrom.updatedAt = event.block.timestamp;
+    tokenOwnerFrom.save();
+  }
+  tokenOwnerFrom.amount = fetchBalance(event.address, event.params._from, event.params._id);
+  tokenOwnerFrom.updatedAt = event.block.timestamp;
+  tokenOwnerFrom.save();
+  let tokenOwnerTo = TokenOwner.load(event.address.toHex() + "-" + to.id + "-" + event.params._id.toString());
+  if (tokenOwnerTo === null) {
+    // Token
+    tokenOwnerTo = new TokenOwner(event.address.toHex() + "-" + to.id + "-" + event.params._id.toString());
+    tokenOwnerTo.token = token.id;
+    tokenOwnerTo.owner = to.id;
+    tokenOwnerTo.amount = BigInt.zero();
+    tokenOwnerTo.createdAt = event.block.timestamp;
+    tokenOwnerTo.updatedAt = event.block.timestamp;
+    tokenOwnerTo.save();
+  }
+  tokenOwnerTo.amount = fetchBalance(event.address, event.params._to, event.params._id);
+  tokenOwnerTo.updatedAt = event.block.timestamp;
+  tokenOwnerTo.save();
 
   // Transaction
   const transaction = new Transaction(event.transaction.hash.toHex());
