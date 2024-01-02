@@ -12,10 +12,10 @@
     "build:iotex_testnet": "graph build subgraph.yaml --network iotex_testnet",
     "build:iotex": "graph build subgraph.yaml --network iotex",
     "create:iotex_testnet": "graph create testnet/eip1155 --node https://rpc.graph.mainnet.iotex.io/",
-    "create:iotex": "graph create ququzone/eip1155 --node https://rpc.graph.mainnet.iotex.io/",
+    "create:iotex": "graph create mainnet/eip1155 --node http://35.225.221.9:8020/",
     "deploy:goerli": "graph deploy --product hosted-service --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ ququzone/eip1155 subgraph.yaml --network goerli",
     "deploy:mainnet": "graph deploy --product hosted-service --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ ququzone/eip1155 subgraph.yaml --network mainnet",
     "deploy:iotex_testnet": "graph deploy --product hosted-service --node https://rpc.graph.mainnet.iotex.io/ --ipfs https://ipfs.mainnet.iotex.io testnet/eip1155 subgraph.yaml --network iotex_testnet",
-    "deploy:iotex": "graph deploy --product hosted-service --node https://rpc.graph.mainnet.iotex.io/ --ipfs https://ipfs.mainnet.iotex.io ququzone/eip1155 subgraph.yaml --network iotex"
+    "deploy:iotex": "graph deploy --product hosted-service --node http://35.225.221.9:8020/ --ipfs http://35.202.84.229:5001 mainnet/eip1155 subgraph.yaml --network iotex"
   }
 }
